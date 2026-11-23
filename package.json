@@ -25,12 +25,10 @@
   "scripts": {
     "check": "npm test && npm run pack:verify",
     "test": "node --test test/*.test.mjs",
-    "pack:verify": "node scripts/verify-package.mjs"
+    "pack:verify": "node scripts/verify-package.mjs",
+    "pack": "node scripts/pack.mjs"
   },
   "dependencies": {
     "@jocki/saddle": "file:vendor/jocki-saddle-0.1.0.tgz"
-  },
-  "bundleDependencies": [
-    "@jocki/saddle"
-  ]
+  }
 }

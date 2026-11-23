@@ -1,3 +1,4 @@
+import { packCLI } from "./pack.mjs";
 import { mkdtemp, writeFile, readFile, rm, access } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -17,9 +18,7 @@ const run = (args, options = {}) => {
   return result.stdout;
 };
 try {
-  const [{ filename }] = JSON.parse(
-    run([npm, "pack", "--json", "--pack-destination", temporary]),
-  );
+  const [{ filename }] = await packCLI(temporary);
   const install = join(temporary, "install");
   run([
     npm,
@@ -27,6 +26,8 @@ try {
     "--prefix",
     install,
     "--offline",
+    "--cache",
+    join(temporary, "empty-cache"),
     "--ignore-scripts",
     "--no-audit",
     "--no-fund",

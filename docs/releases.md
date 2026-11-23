@@ -6,7 +6,7 @@ This repository versions its package independently of the SADDLE wire format. Pa
 2. Run `npm version 0.2.0 --no-git-tag-version` (substitute the chosen version). Review and commit `package.json` and `package-lock.json`.
 3. Push the commit, then `git tag v0.2.0 && git push origin v0.2.0`.
 
-`release.yml` refuses a mismatched tag, verifies the package and publishes a GitHub release with the installable npm tarball and SHA-256 checksums. The CLI package includes its pinned SDK snapshot and can be installed without another checkout. Prerelease tags produce prereleases and use npm's `next` channel.
+`release.yml` refuses a mismatched tag, verifies the package and publishes a GitHub release with the installable npm tarball and SHA-256 checksums. Build the installable archive with `npm run pack -- release`. This stages and bundles runtime dependencies without changing the checkout or its lockfile. The CLI package includes its pinned SDK snapshot and can be installed without another checkout. Prerelease tags produce prereleases and use npm's `next` channel.
 
 Registry publication is opt-in: create/claim the package namespace, configure an [npm trusted publisher](https://docs.npmjs.com/trusted-publishers/) for owner `jocki-app`, repository `saddle-cli`, workflow `release.yml`, environment `npm`, then set GitHub repository variable `NPM_PUBLISH=true`. No long-lived registry token is stored. Until configured, GitHub release tarballs remain fully installable with `npm install /path/to/package.tgz`.
 
