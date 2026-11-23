@@ -22,6 +22,8 @@ saddle share list notes.md
 
 `share grant` takes an invitation and an explicitly approved contact card. `share broadcast` uses `--on` or `--off`. Use `--relay URL` for a transport endpoint and `--profile DIRECTORY` for private identity/cache state. `share serve` exchanges changes until interrupted. Local files work without an active transport. An invitation never substitutes for a grant. Do not commit invitations or identity material.
 
+For content-based rename inference, build the SDK helper with `npm run build:native --prefix node_modules/@jocki/saddle` and pass `--rename-engine /path/to/saddle-renames`. This is the explicit libgit2 capability; no alternate matcher is selected.
+
 The three policy states are enabled, disabled and unset. Unset inherits within the opened boundary. A file operation does not inherit its parent's unopened folder. History deletion removes that version's edits and replays later edits; shared pruning waits for the normal signed peer barrier.
 
 ## JSON language binding
