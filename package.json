@@ -16,7 +16,8 @@
     "src",
     "vendor",
     "LICENSE",
-    "README.md"
+    "README.md",
+    "docs"
   ],
   "engines": {
     "node": ">=26.10.0"

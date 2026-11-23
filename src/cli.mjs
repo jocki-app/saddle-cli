@@ -7,7 +7,7 @@ saddle inspect PATH
 saddle archive list|verify|get|put PATH [--record NAME] [--input FILE]
 saddle metadata get|set PATH [--input FILE]
 saddle history list|enable|disable|unset|reset|delete PATH [--hash HASH]
-saddle share list|enable|disable|unset|invite|join|grant|broadcast|serve PATH
+saddle share contact|list|enable|disable|unset|invite|join|grant|broadcast|serve PATH
   [--invitation LINK] [--contact CARD] [--role read|edit] [--on|--off]
   [--relay URL] [--profile DIRECTORY]
 saddle rpc                       Read one JSON request from stdin
@@ -26,6 +26,8 @@ export function parse(args) {
       continue;
     }
     if (["--on", "--off"].includes(token)) {
+      if (options.broadcast !== undefined)
+        throw Error("Choose either --on or --off");
       options.broadcast = token === "--on";
       continue;
     }
@@ -53,12 +55,35 @@ export function parse(args) {
       ] = value;
   }
   let [group, action, target] = values;
-  if (group === "inspect")
+  if (group === "inspect") {
+    if (values.length !== 2)
+      throw Error("inspect requires exactly one explicit path");
     return { method: "unit.inspect", target: action, ...options };
+  }
   if (group === "share") group = "sharing";
   if (!["archive", "metadata", "history", "sharing"].includes(group))
     throw Error("Choose an operation; use --help for commands");
-  if (!target) throw Error("An explicit file or folder path is required");
+  if (values.length !== 3)
+    throw Error("Exactly one explicit file or folder path is required");
+  const actions = {
+    archive: ["list", "verify", "get", "put"],
+    metadata: ["get", "set"],
+    history: ["list", "enable", "disable", "unset", "reset", "delete"],
+    sharing: [
+      "contact",
+      "list",
+      "enable",
+      "disable",
+      "unset",
+      "invite",
+      "join",
+      "grant",
+      "broadcast",
+      "serve",
+    ],
+  };
+  if (!actions[group].includes(action))
+    throw Error("Unknown operation " + group + "." + action);
   if (
     ["history", "sharing"].includes(group) &&
     ["enable", "disable", "unset"].includes(action)
@@ -82,6 +107,14 @@ async function stdin() {
   return source;
 }
 export async function main(args) {
+  if (args.length === 1 && args[0] === "--version") {
+    console.log(
+      JSON.parse(
+        await readFile(new URL("../package.json", import.meta.url), "utf8"),
+      ).version,
+    );
+    return;
+  }
   if (!args.length || args.includes("--help") || args.includes("-h")) {
     process.stdout.write(help);
     return;

@@ -16,6 +16,7 @@ saddle history list notes.md
 saddle history reset notes.md
 saddle history delete notes.md --hash CHANGE_HASH
 saddle history disable notes.md
+saddle share contact notes.md
 saddle share invite notes.md
 saddle share list notes.md
 ```
@@ -31,9 +32,17 @@ The three policy states are enabled, disabled and unset. Unset inherits within t
 `saddle rpc` reads one JSON request from stdin and writes exactly one envelope to stdout:
 
 ```json
-{"method":"history.list","target":"/absolute/path/notes.md"}
+{ "method": "history.list", "target": "/absolute/path/notes.md" }
 ```
 
 Success is `{"ok":true,"result":...}`; failure is `{"ok":false,"error":"..."}` with a nonzero exit status. The public request type is `UnitRequest` in the TypeScript SDK. File arguments and operations are explicit local capabilities; received synchronization data never creates a request. Low-level archive puts reject Automerge record replacement; use coordinated history methods instead.
 
 See [the specification](https://github.com/jocki-app/saddle-specification) and [SDK docs](https://jocki-app.github.io/saddle-website/). GPL-3.0-only.
+
+Release procedure and registry setup: [releases](docs/releases.md).
+
+## Contact and exchange flow
+
+On each computer, `saddle share contact PATH` prints its public contact card using its private profile. The owner creates an invitation, verifies the recipient’s contact out of band, and runs `saddle share grant PATH --invitation LINK --contact CARD --role edit`. The recipient joins into a selected destination folder with `saddle share join FOLDER --invitation LINK`. Run `saddle share serve PATH --relay URL` on each side for continuous exchange; Ctrl+C flushes pending work and releases the lease. Use the same `--profile` for each computer’s commands. Use `--on`/`--off` and the invitation with `share broadcast` to change that scope’s exchange state.
+
+Use `saddle --version` to identify the installed package. Releases contain an installable tarball; SDK releases also provide platform-specific libgit2 helpers. See [API fields](https://github.com/jocki-app/saddle-typescript-sdk/blob/main/docs/api.md) for the JSON binding and [release setup](docs/releases.md).
