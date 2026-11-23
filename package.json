@@ -23,10 +23,14 @@
     "node": ">=26.10.0"
   },
   "scripts": {
-    "check": "node --test test/*.test.mjs",
-    "test": "node --test test/*.test.mjs"
+    "check": "npm test && npm run pack:verify",
+    "test": "node --test test/*.test.mjs",
+    "pack:verify": "node scripts/verify-package.mjs"
   },
   "dependencies": {
     "@jocki/saddle": "file:vendor/jocki-saddle-0.1.0.tgz"
-  }
+  },
+  "bundleDependencies": [
+    "@jocki/saddle"
+  ]
 }
